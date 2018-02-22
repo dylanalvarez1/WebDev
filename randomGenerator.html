@@ -1,0 +1,73 @@
+<head>
+  <link rel="stylesheet" href="animate.min.css">
+</head>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+ <meta charset="UTF-8">
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+</script>
+
+<script>
+  $(document).ready(function () {
+    $("button").click( function () {
+      console.log("The button was clicked");
+      //alert("The button was clicked");
+      $("#changeText").html("<h1><em>The test text was changed</em></h1>");
+      $("body").css("background-color", "#efeff5");
+      $("#changeText2").text("Quote:");
+
+  });
+
+
+});
+</script>
+<style>
+body {
+  background: #FCFBE3;
+}
+.titleArea {
+  border-bottom: 50px;
+}
+.promptArea {
+
+
+
+  margin-top: 75px;
+  margin-bottom: 0px;
+  margin-right:300px;
+  margin-left: 300px;
+  border-style: solid;
+  border-color: black;
+  border-width: 3px;
+}
+.genTextArea {
+
+  margin-top: 100px;
+  margin-left: 300px;
+  margin-bottom: 100px;
+  margin-right: 300px;
+  padding: 50px;
+  border-color: black;
+  border-style: solid;
+  border-width: 3px;
+}
+p1 {
+  font-family : Monospace;
+}
+</style>
+  <div class = "fluid-container">
+  <div class = "text-center titleArea">
+    <h1 id = "Title"> Random Quote Machine   </h1>
+  </div>
+  <div class = "promptArea">
+
+      <div>
+        <h4 class = "text-center"> Generate New Text: </h4>
+        <button class = " btn btn-primary center-block target offset-9" id = "target1"> Click me <a ref = "google.com" alt = "this is text"></button>
+      </div>
+
+  </div>
+      <div class = "genTextArea">
+        <p1 id = "changeText2"> </p1>
+          <h3 id = "changeText"> </h3>
+      </div>
+    </div>
