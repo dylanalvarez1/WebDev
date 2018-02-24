@@ -8,12 +8,83 @@
 
 <script>
   $(document).ready(function () {
+var colors = ["#efeff5", "#f9e6ff", "#e5e5ff", "#ccffe6", "#cfc9af"];
+console.log(colors);
+var isHidden = true;
+var randomQuote = 0;
+console.log(randomQuote);
+var randomIndex;
     $("button").click( function () {
-      console.log("The button was clicked");
+
+      var color = Math.floor(Math.random() * colors.length);
+      var html = "<h1>";    //Store the html information that I plan to put into changeText
+
+
       //alert("The button was clicked");
-      $("#changeText").html("<h1><em>The test text was changed</em></h1>");
-      $("body").css("background-color", "#efeff5");
-      $("#changeText2").text("Quote:");
+      //$("#changeText").html("<h1><em>The test text was changed</em></h1>");
+      //make a delay in the color change by half a second use setTimeout(function() {"insert code here"}, 500);
+      //Choose a random color and ease the transition from colors
+      $("body").css({"background-color":colors[color], "transition":"background-color 0.5s ease"});
+      randomQuote = Math.floor(Math.random() *21);
+      if($(".genTextArea").css("visibility", "hidden"))
+      {
+        $(".genTextArea").css("visibility", "visible");
+      }
+      else {
+      //  $(".genTextArea").css("visibility", "hidden");
+      }
+        //Pull the json data
+        $(".genTextArea").fadeIn(500, function () {
+          $.getJSON(`http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=${randomQuote}`, function(json) {
+            $("#changeText2").html("<p1 class 'text-right'>~ " + json[randomQuote-1].title + "</p1>");
+            $("#changeText").html("<h1 class = 'blockquote blockquote-center'>" + json[randomQuote-1].content +"</h1>");
+          /*
+          if (typeof json[randomQuote-1].custom_meta !== 'undefined' && typeof json[randomQuote-1].custom_meta.Source !== 'undefined') {
+          $('#changeText3').html('Source: ' + json[randomQuote-1].custom_meta.Source);
+
+        } else {
+          $('#changeText3').text('');
+        }
+        */
+          });
+        });
+
+
+
+
+
+
+      //Toggle visibility
+      $(".genTextArea").css("visibility", "visible");
+
+
+
+
+/*
+      if(isHidden) {
+        $(".genTextArea").fadeIn(500);
+        isHidden = false;
+      }
+      else {
+        $(".genTextArea").fadeOut(500);
+        isHidden = true;
+      }
+      */
+      /*
+      if($(".genTextArea").css('visibility') === 'visible')
+      {
+      //  $(".genTextArea").css("visibility", "hidden");
+
+      }
+      else
+      {
+      //  $(".genTextArea").css("visibility", "visible");
+
+      }
+      */
+       //Make
+      //Make selection of colors for every clicked
+      //Actually pull a random quote for every click
 
   });
 
@@ -24,50 +95,79 @@
 body {
   background: #FCFBE3;
 }
+.quote {
+  font-family: gabriola;
+  font-size: 45;
+}
+.Title {
+  font-size: 76;
+  font-family: Arial;
+}
 .titleArea {
   border-bottom: 50px;
+  margin-top: 100px;
 }
 .promptArea {
 
 
 
-  margin-top: 75px;
+  margin-top: 25px;
   margin-bottom: 0px;
   margin-right:300px;
   margin-left: 300px;
-  border-style: solid;
-  border-color: black;
-  border-width: 3px;
+  // border-style: solid;
+  // border-color: black;
+  // border-width: 3px;
 }
 .genTextArea {
-
-  margin-top: 100px;
+  background-color: white;
+  margin-top: 50px;
   margin-left: 300px;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
   margin-right: 300px;
   padding: 50px;
   border-color: black;
   border-style: solid;
   border-width: 3px;
+  visibility : hidden;
+}
+.button {
+  cursor: pointer;
+  box-shadow: 0 4px #999;
+  margin-bottom: 5px;
+  border-radius: 15%;
+  size: 500px;
+  padding: 15px 70px;
+}
+.button:hover {background-color: #000080}
+
+.button:active {
+  background-color: #000080;
+  box-shadow: 0 2px #666;
+  transform: translateY(2px);
 }
 p1 {
   font-family : Monospace;
+  font-size: 24;
 }
 </style>
   <div class = "fluid-container">
   <div class = "text-center titleArea">
-    <h1 id = "Title"> Random Quote Machine   </h1>
+    <strong><h1 id = "Title" class = "Title"> Random Quote Machine   </h1></strong>
   </div>
   <div class = "promptArea">
 
       <div>
-        <h4 class = "text-center"> Generate New Text: </h4>
-        <button class = " btn btn-primary center-block target offset-9" id = "target1"> Click me <a ref = "google.com" alt = "this is text"></button>
+        <h4 class = "text-center">  </h4>
+        <button class = " button btn btn-primary center-block target offset-9" id = "target1"> Find a Quote! <a ref = "google.com" alt = "this is text"></button>
       </div>
 
   </div>
       <div class = "genTextArea">
-        <p1 id = "changeText2"> </p1>
-          <h3 id = "changeText"> </h3>
+
+        <h3 class = "text-center" id = "changeText"> </h3>
+        <p class = "text-right" id = "changeText2"> </p>
+        <div></div>
+        <p1 class = "text-right" id = "changeText3"> </p1>
       </div>
     </div>
