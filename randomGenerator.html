@@ -24,6 +24,9 @@ var randomIndex;
       //make a delay in the color change by half a second use setTimeout(function() {"insert code here"}, 500);
       //Choose a random color and ease the transition from colors
       $("body").css({"background-color":colors[color], "transition":"background-color 0.5s ease"});
+      $("#changeText").css({"color":colors[color], "transition":"color 0.5s ease"});
+      $("#changeText2").css({"color":colors[color], "transition":"color 0.5s ease"});
+      $("#changeText3").css({"color":colors[color], "transition":"color 0.5s ease"});
       randomQuote = Math.floor(Math.random() *21);
       if($(".genTextArea").css("visibility", "hidden"))
       {
