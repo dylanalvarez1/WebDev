@@ -3,9 +3,8 @@
 </head>
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
  <meta charset="UTF-8">
-<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
-</script>
-
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src = "https://use.fontawesome.com/4c54c175b1.js"> </script>
 <script>
   $(document).ready(function () {
 var colors = ["#efeff5", "#f9e6ff", "#e5e5ff", "#ccffe6", "#cfc9af"];
@@ -34,10 +33,10 @@ var randomIndex;
       //  $(".genTextArea").css("visibility", "hidden");
       }
         //Pull the json data
-        $(".genTextArea").fadeIn(500, function () {
+        $("#fadeText").fadeOut(500, function () {
           $.getJSON(`http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=${randomQuote}`, function(json) {
             $("#changeText2").html("<p1 class 'text-right'>~ " + json[randomQuote-1].title + "</p1>");
-            $("#changeText").html("<h1 class = 'blockquote blockquote-center'>" + json[randomQuote-1].content +"</h1>");
+            $("#changeText").html("<h1 class = ''>" + "<i class='fa fa-quote-left' aria-hidden='true'></i>" + json[randomQuote-1].content +"</h1>");
           /*
           if (typeof json[randomQuote-1].custom_meta !== 'undefined' && typeof json[randomQuote-1].custom_meta.Source !== 'undefined') {
           $('#changeText3').html('Source: ' + json[randomQuote-1].custom_meta.Source);
@@ -47,7 +46,7 @@ var randomIndex;
         }
         */
           });
-        });
+        }).fadeIn();
 
 
 
@@ -164,10 +163,11 @@ p1 {
 
   </div>
       <div class = "genTextArea">
-
-        <h3 class = "text-center" id = "changeText"> </h3>
+        <div id = "fadeText">
+        <h3 class = "" id = "changeText"> </h3>
         <p class = "text-right" id = "changeText2"> </p>
         <div></div>
         <p1 class = "text-right" id = "changeText3"> </p1>
+      </div>
       </div>
     </div>
