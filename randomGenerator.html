@@ -15,20 +15,25 @@ var tweetText = "https://www.twitter.com";
 var tweetCounter = 0;
 var target = "https://www.twitter.com";
 var oldTarget = "";
-console.log(randomQuote);
 var randomIndex;
+var newTextColor = 0;
+var newColorString = "";
     $("button").click( function () {
 
       var color = Math.floor(Math.random() * colors.length);
-      var html = "<h1>";    //Store the html information that I plan to put into changeText
-
-
       //alert("The button was clicked");
       //$("#changeText").html("<h1><em>The test text was changed</em></h1>");
       //make a delay in the color change by half a second use setTimeout(function() {"insert code here"}, 500);
       //Choose a random color and ease the transition from colors
       $("body").css({"background-color":colors[color], "transition":"background-color 0.5s ease"});
-      $(".genTextArea").css({"color":colors[color], "transition":"color 0.5s ease"});
+      console.log(colors[color].replace("#", ""));
+      newTextColor = parseInt(colors[color].replace("#", ""),16);
+      console.log(newTextColor);
+      newTextColor = newTextColor - 999999;
+      console.log(newTextColor);
+      newColorString = newTextColor.toString(16);
+      console.log(newColorString);
+      $(".genTextArea").css({"color":newColorString, "transition":"color 0.5s ease"});
 
       randomQuote = Math.floor(Math.random() *21);
       if($(".genTextArea").css("visibility", "hidden"))
@@ -49,7 +54,21 @@ var randomIndex;
             $("#changeText").html("<h1 class = ''>" + "<i class='fa fa-quote-left' aria-hidden='true'></i>" + json[randomQuote-1].content +"</h1>");
             //Change the link to tweet the quote out or post on fb
             tweetText = 'https://twitter.com/intent/tweet?text=' + json[randomQuote-1].content + '\n' + ' ~ ' + json[randomQuote-1].title;
-            tweetText = tweetText.replace("<p>", "").replace("</p>","").replace("<br>","").replace("</br>", "");
+            //Fails for one test case:
+            /*
+As we know,
+There are known knowns.
+There are things we know we know.
+We also know
+There are known unknowns.
+That is to say
+We know there are some things
+We do not know.
+But there are also unknown unknowns,
+The ones we don’t know
+We don’t know.
+*/
+            tweetText = tweetText.replace("<p>", "").replace("</p>","").replace("<br>","").replace("</br>", "").replace("<br />", "");
 
 /*
             if(tweetCounter == 0) {
@@ -202,13 +221,13 @@ p1 {
 
       <div>
         <h4 class = "text-center">  </h4>
-        <button class = " button btn btn-primary center-block target offset-9" id = "target1"> Find a Quote! <a ref = "google.com" alt = "this is text"></button>
+        <button class = " button btn btn-primary center-block target offset-9" id = "target1"> Find a Quote!</button>
       </div>
 
   </div>
       <div class = "genTextArea">
         <div id = "fadeText">
-        <h3 class = "" id = "changeText"> </h3>
+        <h3 id = "changeText"> </h3>
         <p class = "text-right" id = "changeText2"> </p>
         <div></div>
         <p1 class = "text-right" id = "changeText3"> </p1>
