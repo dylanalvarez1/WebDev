@@ -1,2 +1,3 @@
 # RandomQuoteGenerator
-Front end Project for FreeCodeCamp, using JQuery and Bootstrap in addition to the usual HTML CSS Javascript
+Front end Project for FreeCodeCamp
+Needs the font-awesome folder included in the folder with the html file to properly load icons
