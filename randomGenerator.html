@@ -11,6 +11,10 @@ var colors = ["#efeff5", "#f9e6ff", "#e5e5ff", "#ccffe6", "#cfc9af"];
 console.log(colors);
 var isHidden = true;
 var randomQuote = 0;
+var tweetText = "https://www.twitter.com";
+var tweetCounter = 0;
+var target = "https://www.twitter.com";
+var oldTarget = "";
 console.log(randomQuote);
 var randomIndex;
     $("button").click( function () {
@@ -24,9 +28,8 @@ var randomIndex;
       //make a delay in the color change by half a second use setTimeout(function() {"insert code here"}, 500);
       //Choose a random color and ease the transition from colors
       $("body").css({"background-color":colors[color], "transition":"background-color 0.5s ease"});
-      $("#changeText").css({"color":colors[color], "transition":"color 0.5s ease"});
-      $("#changeText2").css({"color":colors[color], "transition":"color 0.5s ease"});
-      $("#changeText3").css({"color":colors[color], "transition":"color 0.5s ease"});
+      $(".genTextArea").css({"color":colors[color], "transition":"color 0.5s ease"});
+
       randomQuote = Math.floor(Math.random() *21);
       if($(".genTextArea").css("visibility", "hidden"))
       {
@@ -38,8 +41,44 @@ var randomIndex;
         //Pull the json data
         $("#fadeText").fadeOut(500, function () {
           $.getJSON(`http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=${randomQuote}`, function(json) {
+            //Put the quote into the correct html divs
+            //Target holds old tweet text
+
+
             $("#changeText2").html("<p1 class 'text-right'>~ " + json[randomQuote-1].title + "</p1>");
             $("#changeText").html("<h1 class = ''>" + "<i class='fa fa-quote-left' aria-hidden='true'></i>" + json[randomQuote-1].content +"</h1>");
+            //Change the link to tweet the quote out or post on fb
+            tweetText = 'https://twitter.com/intent/tweet?text=' + json[randomQuote-1].content + '\n' + ' ~ ' + json[randomQuote-1].title;
+            tweetText = tweetText.replace("<p>", "").replace("</p>","").replace("<br>","").replace("</br>", "");
+
+/*
+            if(tweetCounter == 0) {
+                target = tweetText;
+                $("a[href='https://www.twitter.com']").attr('href', tweetText);
+                tweetCounter++;
+            }
+            */
+
+
+                console.log("target before: " + target);
+                oldTarget = target;
+                target = tweetText;
+                oldTarget = oldTarget.replace("<p>", "").replace("</p>","").replace("<br>","").replace("</br>", "");
+                $(`a[href='https://www.twitter.com']`).attr('href', target);    //Only find the base case href and replaces
+
+                $(`a[href='${oldTarget}']`).attr('href', target);                  //This needs to find the old value and replace it with the new
+
+                console.log("target after: " + target);
+                console.log(  $("a[href='" + target + "']"));
+
+
+
+/*
+            if(tweetCounter == 0) {
+              $("a[href=${tweetText}]").attr('href', tweetText);
+              tweetCounter++;
+            }
+*/
           /*
           if (typeof json[randomQuote-1].custom_meta !== 'undefined' && typeof json[randomQuote-1].custom_meta.Source !== 'undefined') {
           $('#changeText3').html('Source: ' + json[randomQuote-1].custom_meta.Source);
@@ -109,6 +148,7 @@ body {
   border-bottom: 50px;
   margin-top: 100px;
 }
+
 .promptArea {
 
 
@@ -132,6 +172,7 @@ body {
   border-style: solid;
   border-width: 3px;
   visibility : hidden;
+
 }
 .button {
   cursor: pointer;
@@ -171,6 +212,10 @@ p1 {
         <p class = "text-right" id = "changeText2"> </p>
         <div></div>
         <p1 class = "text-right" id = "changeText3"> </p1>
+        <h1>
+        <a href = "https://www.twitter.com" ><i class="fa fa-twitter" aria-hidden="true"></i></a>
+
+      </h1>
       </div>
       </div>
     </div>
