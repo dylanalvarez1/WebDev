@@ -52,7 +52,7 @@
 </script>
 <style>
 
-.positionInfo{
+.seperateInfo{
   padding: 200px;
   margin:200px;
   border-style:fill;
@@ -63,25 +63,41 @@
   padding-right:200px;
   padding-bottom: 30px;
   padding-top:30px;
-  background-color: cyan;
+  background-color: rgb(235,235,235,.25);
   border-style: solid;
   border-radius:10px;
   border:5px;
   margin:50px;
   visibility: hidden;
 
+
 }
 .backgroundZone{
-  //background-color:yellow;
-  margin: 50px;
+
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/1/16/Appearance_of_sky_for_weather_forecast%2C_Dhaka%2C_Bangladesh.JPG");
+  margin: 5px;
+
+  /* Full height */
+    height: 100%;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
 }
+body, html {
+    height: 100%;
+}
+
 .titleArea{
   padding: 50px;
-  background-color:cyan;
+  background-color:rgb(235,235,235,.25);
   margin:50px;
   border:5px;
   border-style:fill;
-  border-radius:10px
+  border-radius:10px;
+
 }
 </style>
   <div class = "fluid-container">
@@ -92,7 +108,7 @@
       <div id = "locationInfo">
       </div>
       </div>
-      <div class = "positionArea">
+      <div class = "seperateArea">
 
         </div>
       <div class = "forcastArea">
