@@ -1,0 +1,114 @@
+<head>
+  <link rel="stylesheet" href="animate.min.css">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <meta charset="UTF-8">
+</head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src = "https://use.fontawesome.com/4c54c175b1.js"> </script>
+<script>
+  $(document).ready(function () {
+    //use OpenWeatherMap
+    //API KEY:415e3d41b27b114dc51685650a313fc5
+      $("#checkWeatherButton").click(function () {
+        //$(".forcastArea").css({"font-color" : "blue"});
+        $(".forcastArea").css({"visibility" : "visible"});
+          if(navigator.geolocation)
+          {
+            navigator.geolocation.getCurrentPosition(function(position) {
+              $("#locationInfo").html("<h6> Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude + "</h6>");
+              console.log("Before the call");
+
+              $.ajax({
+                url: `https://fcc-weather-api.glitch.me/api/current?lat=${position.coords.latitude}&lon=${position.coords.longitude}`,
+                success: function(result) {
+                  $("#forcast").html(`<h2>Forcast: ${result.weather[0].main}</h2>`);
+                  $("#forcastDisc").html(`<h4> Description: ${result.weather[0].description} </h4> <img src= '${result.weather[0].icon}'>`);
+                  //$("#forcastDisc").html(`<h3> Description: ${result.weather[0].description} </h3>`);
+                  //$("#weatherInfo1").html(JSON.stringify(result.weather[0].main.replace(/['"]+/g, '')) + " " + JSON.stringify(result.weather[0].description.replace(/['"]+/g, '')) + " <img src=" +JSON.stringify(result.weather[0].icon) + ">");
+                  //$("#weatherInfo2").html(`<h3>` + '\n' + `Temperature: ${result.main.temp}<strong>°C</strong>` + '\n' + `Pressure: ${result.main.pressure}` +  '\n' + `Humidity: ${result.main.humidity} </h3>`);
+                  $("#temp").html(`<h3> Temperature: ${result.main.temp}<strong>°C</strong></h3>`);
+                  $("#pressure").html(`<h3> Pressure: ${result.main.pressure}</h3>`);
+                  $("#humidity").html(`<h3> Humidity: ${result.main.humidity} </h3>`);
+
+
+
+
+                  console.log("We got the request!");
+                }
+
+
+              });
+
+            });
+
+          }
+          else {
+            $(".forcastArea").html("No support for geolocation");
+          }
+      });
+      });
+</script>
+<style>
+
+.positionInfo{
+  padding: 200px;
+  margin:200px;
+  border-style:fill;
+  border:5px;
+}
+.forcastArea {
+  padding-left:200px;
+  padding-right:200px;
+  padding-bottom: 30px;
+  padding-top:30px;
+  background-color: cyan;
+  border-style: solid;
+  border-radius:10px;
+  border:5px;
+  margin:50px;
+  visibility: hidden;
+
+}
+.backgroundZone{
+  //background-color:yellow;
+  margin: 50px;
+}
+.titleArea{
+  padding: 50px;
+  background-color:cyan;
+  margin:50px;
+  border:5px;
+  border-style:fill;
+  border-radius:10px
+}
+</style>
+  <div class = "fluid-container">
+    <div class = "backgroundZone text-center">
+      <div class = "titleArea">
+      <h1>  Current Weather Forcaster </h1>
+      <button class = "btn btn-primary" id = "checkWeatherButton">What's the weather?</button>
+      <div id = "locationInfo">
+      </div>
+      </div>
+      <div class = "positionArea">
+
+        </div>
+      <div class = "forcastArea">
+        <div id = "forcast">
+        </div>
+        <div id = "forcastDisc">
+        </div>
+        <div id = "temp">
+        </div>
+        <div id = "pressure">
+        </div>
+        <div id = "humidity">
+        </div>
+      </div>
+
+
+    </div>
+
+  </div>
