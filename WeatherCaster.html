@@ -1,16 +1,45 @@
 <head>
   <link rel="stylesheet" href="animate.min.css">
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
   <meta charset="UTF-8">
 </head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src = "https://use.fontawesome.com/4c54c175b1.js"> </script>
 <script>
+var resultObject;
   $(document).ready(function () {
-    //use OpenWeatherMap
-    //API KEY:415e3d41b27b114dc51685650a313fc5
+
+      $("#convertWeatherButton").attr('disabled', 'disabled');
+
+      $("#convertWeatherButton").click(function (temp)
+      {
+
+
+        if($(this).attr('mode-state') == 1){
+          {
+            $(this).attr('mode-state', 0);
+            $(this).html('Convert to Farenheit');
+
+            $("#temp").html(`<h3> Temperature: ${Math.round(resultObject.main.temp)}<strong>°C</strong></h3>`);
+
+          }
+        }
+
+        else
+        {
+
+          $(this).attr('mode-state', 1);
+          $(this).html('Convert to Celcius');
+
+          $("#temp").html(`<h3> Temperature: ${Math.round((resultObject.main.temp * (9/5) + 32))}<strong>°F</strong></h3>`);
+
+        }
+
+      });
+
+
       $("#checkWeatherButton").click(function () {
         //$(".forcastArea").css({"font-color" : "blue"});
         $(".forcastArea").css({"visibility" : "visible"});
@@ -23,17 +52,23 @@
               $.ajax({
                 url: `https://fcc-weather-api.glitch.me/api/current?lat=${position.coords.latitude}&lon=${position.coords.longitude}`,
                 success: function(result) {
+                  resultObject = result;
+                  $("#convertWeatherButton").removeAttr('disabled');
+                  $("#convertWeatherButton").attr('mode-state', '0');
+                  $("#convertWeatherButton").html("Convert to Farenheit")
                   $("#forcast").html(`<h2>Forcast: ${result.weather[0].main}</h2>`);
                   $("#forcastDisc").html(`<h4> Description: ${result.weather[0].description} </h4> <img src= '${result.weather[0].icon}'>`);
-                  //$("#forcastDisc").html(`<h3> Description: ${result.weather[0].description} </h3>`);
-                  //$("#weatherInfo1").html(JSON.stringify(result.weather[0].main.replace(/['"]+/g, '')) + " " + JSON.stringify(result.weather[0].description.replace(/['"]+/g, '')) + " <img src=" +JSON.stringify(result.weather[0].icon) + ">");
-                  //$("#weatherInfo2").html(`<h3>` + '\n' + `Temperature: ${result.main.temp}<strong>°C</strong>` + '\n' + `Pressure: ${result.main.pressure}` +  '\n' + `Humidity: ${result.main.humidity} </h3>`);
-                  $("#temp").html(`<h3> Temperature: ${result.main.temp}<strong>°C</strong></h3>`);
-                  $("#pressure").html(`<h3> Pressure: ${result.main.pressure}</h3>`);
-                  $("#humidity").html(`<h3> Humidity: ${result.main.humidity} </h3>`);
+                  $("#temp").html(`<h3> Temperature: ${Math.round(result.main.temp)}<strong>°C</strong></h3>`);
+                  $("#pressure").html(`<h3> Pressure:\n ${result.main.pressure}</h3>`);
+                  $("#humidity").html(`<h3> Humidity:\n ${result.main.humidity} </h3>`);
+                  $(`<h4><strong>${result.name}, ${result.sys.country}</strong></h4>`).appendTo("#locationInfo");
 
 
 
+
+                  //Write a function to convert into faranheit and call if we hit button to convert,
+                  //Create a toggle button when we get the weather info
+                  //Add some sick animations or something
 
                   console.log("We got the request!");
                 }
@@ -74,7 +109,7 @@
 }
 .backgroundZone{
 
-  background-image: url("https://upload.wikimedia.org/wikipedia/commons/1/16/Appearance_of_sky_for_weather_forecast%2C_Dhaka%2C_Bangladesh.JPG");
+  background-image: url("https://www.publicdomainpictures.net/pictures/30000/velka/blue-sky-1330598792xLu.jpg");
   margin: 5px;
 
   /* Full height */
@@ -102,9 +137,12 @@ body, html {
 </style>
   <div class = "fluid-container">
     <div class = "backgroundZone text-center">
+
       <div class = "titleArea">
       <h1>  Current Weather Forcaster </h1>
-      <button class = "btn btn-primary" id = "checkWeatherButton">What's the weather?</button>
+      <span><button class = "btn btn-primary" id = "checkWeatherButton">What's the weather?</button>
+            <button class = "btn btn-primary" id = "convertWeatherButton">Convert to Farenheit</button>
+      </span>
       <div id = "locationInfo">
       </div>
       </div>
