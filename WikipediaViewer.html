@@ -1,0 +1,119 @@
+<head>
+  <link rel="stylesheet" href="animate.min.css">
+
+
+  <meta charset="UTF-8">
+</head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src = "https://use.fontawesome.com/4c54c175b1.js"> </script>
+<script>
+
+$(document).ready(function () {
+
+//var wikiLink = 'http://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=';
+    $('#searchButton').click(function () {
+      var inputText = $("#search").val();
+      var wikiLink = 'http://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=' + inputText;
+      console.log(wikiLink);
+      $.ajax( {
+          url: wikiLink,
+          dataType: 'json',
+          data: {
+            origin: "*",
+            limit: '10',
+            namespace: 0
+          },
+          type: 'GET',
+          headers: { 'Api-User-Agent': 'WikiViewerDylan/0.0.1' },
+          success: function(data) {
+             // do something with data
+             var html = "<ul>";
+             console.log(data);
+            for(var i = 0; i < 10; i++)
+            {
+
+
+              html += "<a href='" + data[3][i] + "' alt='Default text since no image'> <h4 class = 'blockArea'>"+ data[1][i] + ": "  + '<br>'+ data[2][i] + "</h4> </a> ";
+
+              //Go up to the 'limit' defined in the ajax request, going over will be out of bounds
+
+            }
+             html += "</ul>"
+
+             $("#listArea").html(html);
+          }
+      } );
+    });
+
+
+
+
+
+
+
+
+
+});
+
+
+
+</script>
+<style>
+
+.blockArea {
+
+  margin-left:150px;
+  margin-right:150px;
+  margin-bottom: 20px;
+  padding:25px;
+  background-color: LightGrey;
+  border-style: solid;
+
+}
+.blockArea:hover {
+  border-color:blue;
+}
+.blockArea:active {
+  border-color: red;
+}
+
+body {
+  background-color : DarkSlateGray;
+}
+
+h1, h6 {
+  color: white;
+}
+
+
+a:link, a:visited, a:hover, a:active {
+   color: black;
+   text-decoration: none;
+ }
+
+
+
+
+</style>
+  <div class = "fluid-container">
+    <div class = "text-center generalArea">
+    <h1>  Wikipedia Viewer: </h1>
+    <h6><strong>Search:</strong></h6>
+    <div class = "row">
+        <div class = "col-sm-4"></div>
+        <div class = 'col-sm-4'>
+        <input class = 'form-control' type = 'search' id = "search">
+        </div>
+    </div>
+        <br>
+        <span>
+        <button id = "searchButton" class = 'btn btn-primary'>Search</button>
+          <a href = "https://en.wikipedia.org/wiki/Special:Random"><input type = 'button' value = "Random" class = 'btn btn-primary'></a>
+        </span>
+
+
+
+      <h3 class = "text-center" id = 'listArea'> </h3>
+  </div>
+  </div>
