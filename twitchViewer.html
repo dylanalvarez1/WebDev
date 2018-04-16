@@ -1,0 +1,223 @@
+<head>
+  <link rel="stylesheet" href="animate.min.css">
+  <meta charset="UTF-8">
+</head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src = "https://use.fontawesome.com/4c54c175b1.js"> </script>
+<script src="https://embed.twitch.tv/embed/v1.js"></script>
+<script>
+
+//Use Array.find(callback) to filter out who is online eventually (later)
+
+
+  var selectedStreamer = null;
+  //This allows you to click a streamer element, and get the streamer
+  $(document).on("click",".streamers", function () {
+    let streamUser = $(this).html().split(' ')[4];
+    let formatStreamUser = streamUser.substr(0, streamUser.length-1);
+    console.log(formatStreamUser);
+    selectedStreamer = formatStreamUser;
+
+  });
+
+
+  var vidReady = new CustomEvent('vidReady', {
+  });
+
+  var selectedStreamer = null;
+
+
+
+
+  function prepareEventHandlers() {
+  //get a specific page ID and assign it as a variable
+  var vidArea = document.getElementById("twitch-embed");
+  //initiate this function when the ID is clicked
+  vidArea.addEventListener('vidReady', function () {
+    if(selectedStreamer != null)
+    {
+      let iframe = `<script src="https://embed.twitch.tv/embed/v1.js"></scr` + `ipt>
+         <script type="text/javascript">
+           new Twitch.Embed("twitch-embed", {
+             width: 854,
+             height: 480,
+             channel: '${selectedStreamer}'
+           });
+         </scr`+ `ipt>`;
+         console.log(iframe);
+
+      $("#twitch-embed").html(iframe);
+      window.scrollTo(0,0);
+    }
+  });
+  }
+
+
+
+  //This allows you to click a streamer element, and get the streamer
+  $(document).on("click",".streamers", function () {
+
+    let streamUser = $(this).html().split(' ')[4];
+    let formatStreamUser = streamUser.substr(0, streamUser.length-1);
+
+    selectedStreamer = formatStreamUser;
+    var vidArea = document.getElementById("twitch-embed");
+    vidArea.dispatchEvent(vidReady);
+
+  });
+
+
+
+
+
+
+$(document).ready(function () {
+
+prepareEventHandlers();
+
+
+$('#getTwitch').prop("disabled", true);
+//var streamers = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas", "mew2king", "DisguisedToastHS"];
+var userStreamers = [];
+var html = ' ';
+var tempHTML = '';
+
+  $("#searchBox").click(function() {
+//Search your own follows (by typing in your name)
+    //$("#streamersHere").html(' ');
+    let userURL = `https://wind-bow.glitch.me/twitch-api/users/${$("#userSearch").val()}/follows/channels`
+    $('#getTwitch').prop("disabled", false);
+
+    //Make sure the text box has a value
+    if($("#userSearch").val() != '')
+    {
+    $.ajax(
+      {
+        url: userURL,
+        dataType: 'json',
+        type: 'GET',
+
+
+        success: function(data) {
+
+          $("#streamersHere").html(' ');
+          html = ' ';
+          data.follows.forEach(function (followElement) { //followElement.channel.name is the name of the person that the user follows
+            userStreamers.push(followElement.channel.name);
+          });
+
+            userStreamers.forEach(function (streamer) {
+              let authURL = `https://wind-bow.glitch.me/twitch-api/streams/${streamer}?callback=?`;
+              $(".streamerList").html(`<h2>${$("#userSearch").val()}'s Follow List:</h2>`);
+
+              $.ajax(
+                {
+                  url: authURL,
+                  dataType: 'json',
+                  type: 'GET',
+
+                  success: function(data) {
+
+
+                    if(data.stream != null) //User is online
+                    {
+                    html += `
+                      <div class = 'streamers'> <span> <h4> <strong> ${data.stream.channel.name}: </strong>  <img class = 'pull-right img-responsive' src = '${data.stream.preview.small}' alt = 'Could not load image'> </span>
+                      <h5> ${data.stream.game} </h5> <a href = '${data.stream.channel.url}'> <h6> ${data.stream.channel.status} </h6>
+                      </div></a>`;
+                    }
+                    else { //User is offline
+                    html += `<h4 class = 'streamers'> ${streamer}: Offline \n </h4>`;
+                    }
+                  $("#streamersHere").html(html);
+                  },
+                  error: function() {
+                    console.log('request did not go through :(');
+                  }
+
+                });
+
+            });
+
+            $("#streamersHere").html();
+
+        },
+        error: function() {
+          console.log('request did not go through :(');
+        }
+
+      });
+
+    }
+    else //The search bar had nothing in it
+    {
+      $("#userSearch").prop("placeholder", "Please enter a user before hitting search!");
+    }
+
+
+
+  });
+
+
+});
+
+
+
+</script>
+<style>
+.streamerSpace {
+
+}
+body {
+  background: LightGrey;
+}
+.generalArea {
+
+}
+
+.streamers {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+
+  margin-bottom: 20px;
+
+  background-color: navy;
+  color: white;
+}
+.streamers:hover {
+  border-color: yellow;
+  border-style: solid;
+}
+
+</style>
+  <div class = "fluid-container">
+    <div class = "row generalArea text-center" >
+      <h1 class = 'text-center'>Twitch User Follower Viewer</h1>
+      <h6 class = 'text-center'>See who your favorite users are following!</h6>
+    </div>
+      <div class="row">
+        <div class = 'col-md-offset-5 col-large-5'><div class = 'form-inline'><input type = "text" id = 'userSearch' class = 'searchField form-control' placeholder = 'Type in a user and see who they follow!'> <input type = 'button' class = 'btn btn-primary' id = 'searchBox' value = 'Search'></input></input></div>
+        </div>
+        <br>
+        <div class = 'text-center' id = "twitch-embed"></div>
+
+
+
+     <div class = "col-xs-1" id = "offset">
+     </div>
+     <div class = "col-lg-4 streamerList"></div>
+
+    </div>
+    <div class = "row streamerSpace">
+      <div class = "col-xs-1" id = "offset">
+      </div>
+      <div class = "col-lg-4" id = "streamersHere">
+      </div>
+    </div>
+
+
+
+</div>
