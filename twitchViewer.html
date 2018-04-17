@@ -13,7 +13,7 @@
 
   var selectedStreamer = null;
   //This allows you to click a streamer element, and get the streamer
-  $(document).on("click",".streamers", function () {
+  $(document).on("click",".streamersOnline", function () {
     let streamUser = $(this).html().split(' ')[4];
     let formatStreamUser = streamUser.substr(0, streamUser.length-1);
     console.log(formatStreamUser);
@@ -26,9 +26,6 @@
   });
 
   var selectedStreamer = null;
-
-
-
 
   function prepareEventHandlers() {
   //get a specific page ID and assign it as a variable
@@ -45,7 +42,6 @@
              channel: '${selectedStreamer}'
            });
          </scr`+ `ipt>`;
-         console.log(iframe);
 
       $("#twitch-embed").html(iframe);
       window.scrollTo(0,0);
@@ -56,7 +52,7 @@
 
 
   //This allows you to click a streamer element, and get the streamer
-  $(document).on("click",".streamers", function () {
+  $(document).on("click",".streamersOnline", function () {
 
     let streamUser = $(this).html().split(' ')[4];
     let formatStreamUser = streamUser.substr(0, streamUser.length-1);
@@ -76,16 +72,22 @@ $(document).ready(function () {
 
 prepareEventHandlers();
 
-
-$('#getTwitch').prop("disabled", true);
 //var streamers = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas", "mew2king", "DisguisedToastHS"];
 var userStreamers = [];
-var html = ' ';
+var userStreamersOnline = [];
+var userStreamersOffline = [];
+var htmlOnline = ' ';
+var htmlOffline = ' ';
 var tempHTML = '';
 
   $("#searchBox").click(function() {
 //Search your own follows (by typing in your name)
     //$("#streamersHere").html(' ');
+    userStreamers = [];
+    userStreamersOnline = [];
+    userStreamersOffline = [];
+    var htmlOnline = ' ';
+    var htmlOffline = ' ';
     let userURL = `https://wind-bow.glitch.me/twitch-api/users/${$("#userSearch").val()}/follows/channels`
     $('#getTwitch').prop("disabled", false);
 
@@ -105,11 +107,13 @@ var tempHTML = '';
           html = ' ';
           data.follows.forEach(function (followElement) { //followElement.channel.name is the name of the person that the user follows
             userStreamers.push(followElement.channel.name);
+
           });
 
             userStreamers.forEach(function (streamer) {
               let authURL = `https://wind-bow.glitch.me/twitch-api/streams/${streamer}?callback=?`;
-              $(".streamerList").html(`<h2>${$("#userSearch").val()}'s Follow List:</h2>`);
+              $(".streamerList").html(`<h2 id = 'textListBottom'>${$("#userSearch").val()}'s Follow List:\n <br></h2>`);
+
 
               $.ajax(
                 {
@@ -122,15 +126,34 @@ var tempHTML = '';
 
                     if(data.stream != null) //User is online
                     {
-                    html += `
-                      <div class = 'streamers'> <span> <h4> <strong> ${data.stream.channel.name}: </strong>  <img class = 'pull-right img-responsive' src = '${data.stream.preview.small}' alt = 'Could not load image'> </span>
+                      userStreamersOnline.push(data);
+                    htmlOnline += `
+                      <div class = 'streamersOnline'> <span> <h4> <strong> ${data.stream.channel.name}: </strong>  <img class = 'pull-right img-responsive' src = '${data.stream.preview.small}' alt = 'Could not load image'> </span>
                       <h5> ${data.stream.game} </h5> <a href = '${data.stream.channel.url}'> <h6> ${data.stream.channel.status} </h6>
                       </div></a>`;
                     }
                     else { //User is offline
-                    html += `<h4 class = 'streamers'> ${streamer}: Offline \n </h4>`;
+                    userStreamersOffline.push(data);
+                    htmlOffline += `<h4 class = 'streamersOffline'> ${streamer}: Offline \n </h4>`;
                     }
-                  $("#streamersHere").html(html);
+
+
+                 let onlineCount = 0;
+                  userStreamersOnline.forEach(function (i) {
+                    onlineCount++;
+                 });
+                 let offlineCount = 0;
+                  userStreamersOffline.forEach(function (i) {
+                    offlineCount++;
+                 });
+
+
+
+                  $("#streamersHereLeft").html(`<h4>Online (${onlineCount}):</h4>` + htmlOnline);
+                  $("#streamersHereRight").html(`<h4>Offline (${offlineCount}):</h4>` + htmlOffline);
+
+
+
                   },
                   error: function() {
                     console.log('request did not go through :(');
@@ -140,7 +163,9 @@ var tempHTML = '';
 
             });
 
+
             $("#streamersHere").html();
+
 
         },
         error: function() {
@@ -167,16 +192,31 @@ var tempHTML = '';
 </script>
 <style>
 .streamerSpace {
-
+  background-color : #3b3a30;
 }
-body {
-  background: LightGrey;
+#textListBottom {
+  border-top-style: solid;
+  border-top-color: black;
+  border-top-width: medium;
+  padding-top: 20px;
+}
+h1, p {
+
+  color: white;
+}
+h6 {
+
+  color: black;
 }
 .generalArea {
-
+  background-color:  purple;
+  padding-bottom: 20px;
+  color: white;
+  border-style: solid;
+  border-color: black;
 }
 
-.streamers {
+.streamersOnline {
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 25px;
@@ -184,21 +224,48 @@ body {
 
   margin-bottom: 20px;
 
-  background-color: navy;
-  color: white;
+  background-color: #b2c2bf;
+  color: black;
 }
-.streamers:hover {
+.streamersOnline:hover {
   border-color: yellow;
   border-style: solid;
+}
+.streamersOffline {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+
+  margin-bottom: 20px;
+
+  background-color: #b2c2bf;
+  color: black;
+}
+.streamersOffline:hover {
+  border-color: Red;
+  border-style: solid;
+}
+#userSearch {
+  background-color: white;
+}
+.fluid-container {
+  background-color: #3b3a30;
+  margin: 50px;
+}
+body {
+  color: white;
+  background-color: #3b3a30;
 }
 
 </style>
   <div class = "fluid-container">
     <div class = "row generalArea text-center" >
       <h1 class = 'text-center'>Twitch User Follower Viewer</h1>
-      <h6 class = 'text-center'>See who your favorite users are following!</h6>
-    </div>
-      <div class="row">
+      <p class = 'text-center'>See who your favorite users are following!</p>
+</div>
+<br>
+      <div class="row" >
         <div class = 'col-md-offset-5 col-large-5'><div class = 'form-inline'><input type = "text" id = 'userSearch' class = 'searchField form-control' placeholder = 'Type in a user and see who they follow!'> <input type = 'button' class = 'btn btn-primary' id = 'searchBox' value = 'Search'></input></input></div>
         </div>
         <br>
@@ -208,13 +275,18 @@ body {
 
      <div class = "col-xs-1" id = "offset">
      </div>
-     <div class = "col-lg-4 streamerList"></div>
+     <div class = "text-center streamerList"></div>
+     <br>
 
     </div>
     <div class = "row streamerSpace">
       <div class = "col-xs-1" id = "offset">
       </div>
-      <div class = "col-lg-4" id = "streamersHere">
+
+      <div class = "col-lg-4 " id = "streamersHereLeft"><div id = 'streamersHereLeftTOP'></div>
+      </div>
+
+      <div class = "col-lg-4 col-lg-offset-2" id = "streamersHereRight"><div id = 'streamersHereRightTOP'></div>
       </div>
     </div>
 
