@@ -8,7 +8,7 @@ Projects:
 - Current Weather Forcaster
   - TODO: reorganize information, and include more info too, maybe some iframe or something if needed
 - Wikipedia Viewer
-  - TODO: Fix bug where you search nothing you get a bunch of nulls, maybe by searching through API docs
+  - TODO: Add more functionality? Idk what exactly though
 - Twitch Viewer
   - TODO: Tweak visuals, add list filters (by view count, etc)
 - Personal Website
