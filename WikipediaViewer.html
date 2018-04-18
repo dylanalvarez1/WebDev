@@ -32,13 +32,36 @@ $(document).ready(function () {
              console.log(data);
             for(var i = 0; i < 10; i++)
             {
+              //The above way only correctly filters null result error if there are more than 10 valid search results from the request
 
-
-              html += "<a href='" + data[3][i] + "' alt='Default text since no image'> <h4 class = 'blockArea'>"+ data[1][i] + ": "  + '<br>'+ data[2][i] + "</h4> </a> ";
+              if(data[1][i] != null && data[3][i] != null)//If there is a description, then dont add the default one
+              {
+                html += "<a href='" + data[3][i] + "' alt='Default text since no image'> <h4 class = 'blockArea'><strong>"+ data[1][i] + ": "  + '</strong><br>'+ data[2][i];
+                if(data[2][i] != '')
+                {
+                  html+= "</h4> </a> ";
+                }
+                else {
+                  //In case there is no description returned, this is the default
+                  {
+                    console.log("DEBUG: Test case, there is no description returned");
+                    html += " Click to learn more</h4> </a> ";
+                  }
+                }
+              }
+              else //If there is no valid result, dont add anything
+              {
+                html += '';
+              }
 
               //Go up to the 'limit' defined in the ajax request, going over will be out of bounds
 
             }
+            if(html == '<ul>') //Edge case, if there is no results at all, then say 'no results found'
+            {
+              html = 'No Results found'
+            }
+
              html += "</ul>"
 
              $("#listArea").html(html);
@@ -63,7 +86,7 @@ $(document).ready(function () {
 
 .blockArea {
 
-  margin-left:150px;
+  margin-left:120px;
   margin-right:150px;
   margin-bottom: 20px;
   padding:25px;
